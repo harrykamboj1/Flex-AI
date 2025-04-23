@@ -81,6 +81,20 @@ http.route({
                 }catch(e){
                     console.log("Error creating user :: " + e)
                 }
+            }else if(evt.type === 'user.updated'){
+                const {id,first_name,last_name,image_url,email_addresses} = evt.data;
+                const email = email_addresses[0].email_address;
+                const name = `${first_name || ""} ${last_name || ""}`.trim();
+                try{
+                    await ctx.runMutation(api.users.updateUser, {
+                        email,
+                        name,
+                        image :image_url,
+                        clerkId:id,
+                    })
+                }catch(e){
+                    console.log("Error creating user :: " + e)
+                }
             }
 
             return new Response('Webhook processed successfully', {status: 200});
